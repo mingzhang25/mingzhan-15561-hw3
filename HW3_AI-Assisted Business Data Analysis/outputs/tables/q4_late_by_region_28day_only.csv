@@ -1,0 +1,8 @@
+Region,Orders,Late,Median_days_to_ship,Mean_days_to_ship,Late_rate_%,CI_low_%,CI_high_%
+British Isles,62,6,6.00,9.03,9.68,4.51,19.55
+Eastern Europe,5,0,8.00,7.20,0.00,-0.00,43.45
+Latin America,137,2,7.00,7.69,1.46,0.40,5.17
+Nordics,68,3,7.00,8.12,4.41,1.51,12.19
+North America,125,6,7.00,8.93,4.80,2.22,10.08
+Southern Europe,59,3,7.00,7.81,5.08,1.74,13.92
+Western Europe,226,5,7.00,8.25,2.21,0.95,5.07
