@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind Business Review</title>
+<meta name="description" content="Four business questions answered from the Northwind Traders order data, July 1996 to May 1998.">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --rule: #e1e0d9;
+    --accent: #2a78d6;
+    --accent-soft: #eaf2fc;
+    --warn: #d03b3b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 880px; margin: 0 auto; padding: 48px 16px 80px; }
+  header h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; }
+  header p.lede { color: var(--ink-2); font-size: 1.1rem; margin: 0 0 24px; }
+  .meta { color: var(--muted); font-size: .9rem; }
+  nav.toc { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 20px; margin: 24px 0 40px; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  .summary { background: var(--accent-soft); border-radius: 10px; padding: 18px 22px; margin-bottom: 40px; }
+  .summary h2 { margin-top: 0; font-size: 1.2rem; }
+  .summary ul { margin: 0; padding-left: 20px; }
+  section.q { border-top: 1px solid var(--rule); padding-top: 32px; margin-top: 48px; }
+  .qnum { color: var(--accent); font-weight: 700; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
+  section.q h2 { font-size: 1.45rem; line-height: 1.3; margin: 4px 0 16px; }
+  h3 { font-size: 1rem; margin: 24px 0 6px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); }
+  figure { margin: 20px 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 12px; }
+  figure img { width: 100%; height: auto; display: block; }
+  figcaption { color: var(--ink-2); font-size: .88rem; margin-top: 8px; }
+  .finding { border-left: 4px solid var(--accent); background: var(--surface); padding: 12px 16px; border-radius: 0 8px 8px 0; }
+  .implication { border-left: 4px solid var(--ink); background: var(--surface); padding: 12px 16px; border-radius: 0 8px 8px 0; }
+  .caveat { color: var(--ink-2); font-size: .92rem; }
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .92rem; background: var(--surface); }
+  th, td { padding: 7px 10px; border-bottom: 1px solid var(--rule); text-align: left; }
+  th { color: var(--ink-2); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .neg { color: var(--warn); font-weight: 600; }
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: .9rem; }
+  a { color: var(--accent); }
+  code { font-size: .9em; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>Northwind Traders: Where to Grow, What to Fix</h1>
+  <p class="lede">A business review for the management team, built from 830 orders (2,155 order lines) placed between 4 July 1996 and 6 May 1998.</p>
+  <p class="meta">All revenue figures are in USD after line-item discounts, using the price actually charged on each order. Code and data to reproduce every number: <a href="https://github.com/mingzhang25/mingzhan-15561-hw3">GitHub repository</a>.</p>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <strong>Questions</strong>
+  <ol>
+    <li><a href="#q1">Which markets are growing or shrinking, and where should sales attention go?</a></li>
+    <li><a href="#q2">Are discounts winning more business, or just giving away revenue?</a></li>
+    <li><a href="#q3">How dependent are we on a few big customers, and who is drifting away?</a></li>
+    <li><a href="#q4">Are we shipping on time, and what causes late shipments?</a></li>
+  </ol>
+</nav>
+
+<div class="summary">
+  <h2>Summary for the manager</h2>
+  <ul>
+    <li><strong>The business is growing fast.</strong> Revenue in Jan–Apr 1998 was $422k, 2.2 times the $191k of Jan–Apr 1997. The USA, Germany and Brazil produced 57% of that growth.</li>
+    <li><strong>Country “declines” are really lost accounts.</strong> Canada, Mexico and Finland shrank because one major customer in each stopped or slowed ordering.</li>
+    <li><strong>Deep discounts don't buy much extra volume.</strong> Order lines at 15–25% off are only slightly bigger than lines at 5–10% off, yet those tiers account for 80% of the $88.7k given away. Capping discounts at 10% could have kept up to $36k.</li>
+    <li><strong>Revenue is concentrated, and 8 regular customers have gone quiet.</strong> The top 10 customers produce 45% of revenue. Eight customers who used to order regularly have now been silent for more than twice their usual gap; they spent $51.8k in the past 12 months.</li>
+    <li><strong>Shipping is reliable overall, except rush orders.</strong> 95.4% of orders ship on time, but orders with a 14-day deadline are late 18% of the time because they are not packed or shipped any faster than standard orders.</li>
+  </ul>
+</div>
+
+<!-- ============================ Q1 ============================ -->
+<section class="q" id="q1">
+  <div class="qnum">Question 1</div>
+  <h2>Which customer markets are growing or shrinking, and where should sales attention go?</h2>
+
+  <h3>Why it matters</h3>
+  <p>Sales staff and marketing budget are limited. Knowing which countries are growing, which are stalling, and <em>why</em> tells the manager where to invest and where a market needs rescuing.</p>
+
+  <h3>Approach</h3>
+  <p>The data covers only part of 1996 (from July) and part of 1998 (to 6 May), so comparing calendar-year totals would be misleading. Instead we compare the <strong>same four complete months</strong>, January–April, in 1997 and 1998. Each order is assigned to the customer's country. For every country that lost revenue we then looked at which individual customers drove the change.</p>
+
+  <figure>
+    <img src="figures/q1_monthly_revenue.png" alt="Line chart of monthly revenue from July 1996 to April 1998, rising from about $27k to $124k per month, with Jan-Apr 1997 and Jan-Apr 1998 shaded.">
+    <figcaption>Monthly revenue climbed steeply from late 1997. The shaded windows are the two periods compared below.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/q1_country_change.png" alt="Dumbbell chart of revenue by country for Jan-Apr 1997 versus Jan-Apr 1998. USA, Germany and Brazil grew the most; Denmark, Canada, Mexico and Finland declined.">
+    <figcaption>Gray dot = Jan–Apr 1997, blue dot = Jan–Apr 1998, sorted by 1998 revenue. Red marks the four markets that shrank. Percent change is shown only where the 1997 base was at least $5k; for smaller markets a percentage is not meaningful.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Shrinking or flat market</th><th class="num">Jan–Apr 1997</th><th class="num">Jan–Apr 1998</th><th>What drove it</th></tr></thead>
+    <tbody>
+      <tr><td>Denmark</td><td class="num">$13,706</td><td class="num">$4,284</td><td>Simons bistro: $11,188 → $0 in the window (it ordered again on 6 May 1998)</td></tr>
+      <tr><td>Canada</td><td class="num">$15,211</td><td class="num">$11,526</td><td>Mère Paillarde: $10,420 → $0. No orders since Oct 1997 (see Q3)</td></tr>
+      <tr><td>Mexico</td><td class="num">$6,965</td><td class="num">$3,885</td><td>Tortuga Restaurante: $4,150 → $1,514</td></tr>
+      <tr><td>Finland</td><td class="num">$4,132</td><td class="num">$2,257</td><td>Wartian Herkku: $4,132 → $270</td></tr>
+      <tr><td>France</td><td class="num">$17,084</td><td class="num">$17,929</td><td>4 new customers won, but established accounts shrank (Blondel père et fils, Folies gourmandes, La maison d'Asie)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Main finding</h3>
+  <p class="finding">Revenue more than doubled (+121%) between Jan–Apr 1997 and Jan–Apr 1998, and 17 of 21 countries grew. The <strong>USA (+$53k), Germany (+$47k) and Brazil (+$32k)</strong> produced 57% of all growth. The four markets that shrank, and flat France, are small. In every case the drop traces back to <strong>one or two individual customers</strong> ordering less or stopping, not to a broad market downturn.</p>
+
+  <h3>Business implication</h3>
+  <p class="implication">Put new sales effort into the three engines of growth (USA, Germany, Brazil), where more customers are already buying (USA 7 → 11, Germany 8 → 11). For the weak markets, the fix is <strong>account management, not market strategy</strong>. A call to Mère Paillarde in Canada or to the lapsed French accounts is cheaper than a country-level campaign. France deserves attention because it is winning new customers but losing established ones.</p>
+  <p class="caveat">Caveat: four months per year is a short window, and small markets depend on one or two customers. Simons bistro (Denmark) shows the risk: it placed an order just after the window closed, so Denmark's decline may be partly timing.</p>
+</section>
+
+<!-- ============================ Q2 ============================ -->
+<section class="q" id="q2">
+  <div class="qnum">Question 2</div>
+  <h2>Are discounts winning more business, or just giving away revenue?</h2>
+
+  <h3>Why it matters</h3>
+  <p>Every discount dollar comes straight out of revenue. Discounts are worth it only if they get customers to buy more. If a 25% discount sells the same quantity as a 5% discount, the extra 20 points are money left on the table.</p>
+
+  <h3>Approach</h3>
+  <p>We grouped all 2,155 order lines by the discount applied (Northwind uses 5, 10, 15, 20 and 25% tiers; 8 lines with unusual 1–6% discounts are grouped with 5%). For each tier we compared the <strong>quantity sold per line</strong> and added up the <strong>dollars given away</strong>. We then estimated what would have been kept if every discount above 10% had been capped at 10%.</p>
+
+  <figure>
+    <img src="figures/q2_quantity_by_discount.png" alt="Box plot of units per order line by discount tier. Medians are 18 with no discount, 20 at 1-6% and 10%, 21 at 15% and 20%, and 25 at 25%.">
+    <figcaption>Each box spans the middle 50% of order lines. The white line is the median. Dots are unusually large lines.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/q2_discount_dollars.png" alt="Bar chart of discount dollars by tier: $8k at 1-6%, $10k at 10%, $15k at 15%, $22k at 20%, $33k at 25%.">
+    <figcaption>Total revenue given up through discounts over the whole period, by tier.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Discount tier</th><th class="num">Order lines</th><th class="num">Median units</th><th class="num">Mean units</th><th class="num">Discount given</th><th class="num">Share of all discounts</th></tr></thead>
+    <tbody>
+      <tr><td>None</td><td class="num">1,317</td><td class="num">18</td><td class="num">21.7</td><td class="num">$0</td><td class="num">0%</td></tr>
+      <tr><td>1–6%</td><td class="num">193</td><td class="num">20</td><td class="num">26.9</td><td class="num">$7,782</td><td class="num">8.8%</td></tr>
+      <tr><td>10%</td><td class="num">173</td><td class="num">20</td><td class="num">25.2</td><td class="num">$10,167</td><td class="num">11.5%</td></tr>
+      <tr><td>15%</td><td class="num">157</td><td class="num">21</td><td class="num">28.4</td><td class="num">$15,442</td><td class="num">17.4%</td></tr>
+      <tr><td>20%</td><td class="num">161</td><td class="num">21</td><td class="num">27.0</td><td class="num">$22,295</td><td class="num">25.1%</td></tr>
+      <tr><td>25%</td><td class="num">154</td><td class="num">25</td><td class="num">28.2</td><td class="num">$32,980</td><td class="num">37.2%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Main finding</h3>
+  <p class="finding">Northwind gave away <strong>$88.7k in discounts (6.5% of gross sales)</strong> on 39% of order lines. Discounted lines are somewhat larger than undiscounted ones (mean 25–28 units vs 22). But <strong>deeper discounts barely move volume</strong>: the typical 15–25% line is only 1–5 units bigger than a 5–10% line. Meanwhile the 15–25% tiers account for <strong>80% of all discount dollars</strong>.</p>
+
+  <h3>Business implication</h3>
+  <p class="implication">Introduce a discount policy that caps routine discounts at 10% and requires approval for anything deeper. If volumes had held, capping all discounts at 10% would have kept <strong>about $36.1k</strong> (on 645 order lines), roughly 2.9% of total revenue, with no change in the product range or customer base.</p>
+  <p class="caveat">Caveat: this compares order lines; it is not a controlled experiment. Larger or more loyal customers may get bigger discounts <em>because</em> they buy more, and some might buy less, or leave, if their discount were cut. The $36k is therefore an upper bound. A safer first step is to test the cap on new or low-volume accounts.</p>
+</section>
+
+<!-- ============================ Q3 ============================ -->
+<section class="q" id="q3">
+  <div class="qnum">Question 3</div>
+  <h2>How dependent are we on a few big customers, and which valuable customers are drifting away?</h2>
+
+  <h3>Why it matters</h3>
+  <p>If a small number of customers produce most of the revenue, losing even one is a serious risk. Spotting customers who have stopped ordering <em>before</em> they are gone for good gives the sales team a chance to win them back.</p>
+
+  <h3>Approach</h3>
+  <p>We ranked the 89 buying customers by total revenue and plotted the cumulative share (a Pareto curve). To find customers drifting away, we compared each customer's <strong>days since last order</strong> (as of 6 May 1998, the last date in the data) with <strong>its own usual gap between orders</strong> (median of its past gaps). A customer is flagged <strong>at risk</strong> if it has ordered at least 3 times, has been silent for 60+ days, <em>and</em> has been silent for more than twice its usual gap. Using each customer's own rhythm avoids flagging naturally infrequent buyers.</p>
+
+  <figure>
+    <img src="figures/q3_pareto.png" alt="Pareto curve: the top 10 customers account for 45% of revenue and the top 18 (20%) for 60%.">
+    <figcaption>The dashed diagonal is what revenue would look like if every customer spent the same amount.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/q3_at_risk.png" alt="Scatter plot of lifetime revenue (log scale) against days since last order, with eight at-risk customers highlighted in orange, including Mère Paillarde (Canada) at 188 days and Berglunds snabbköp (Sweden) at 63 days.">
+    <figcaption>Each dot is a customer. Orange = at risk (silent for more than twice its usual gap between orders). Revenue is on a log scale.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>At-risk customer</th><th>Country</th><th class="num">Lifetime revenue</th><th class="num">Orders</th><th class="num">Usual gap (days)</th><th class="num">Days silent</th></tr></thead>
+    <tbody>
+      <tr><td>Mère Paillarde</td><td>Canada</td><td class="num">$28,872</td><td class="num">13</td><td class="num">18</td><td class="num neg">188</td></tr>
+      <tr><td>Berglunds snabbköp</td><td>Sweden</td><td class="num">$24,928</td><td class="num">18</td><td class="num">26</td><td class="num neg">63</td></tr>
+      <tr><td>Blondel père et fils</td><td>France</td><td class="num">$18,534</td><td class="num">11</td><td class="num">43</td><td class="num neg">114</td></tr>
+      <tr><td>Seven Seas Imports</td><td>UK</td><td class="num">$16,215</td><td class="num">9</td><td class="num">29</td><td class="num neg">91</td></tr>
+      <tr><td>Victuailles en stock</td><td>France</td><td class="num">$9,182</td><td class="num">10</td><td class="num">19</td><td class="num neg">103</td></tr>
+      <tr><td>Familia Arquibaldo</td><td>Brazil</td><td class="num">$4,108</td><td class="num">7</td><td class="num">64</td><td class="num neg">187</td></tr>
+      <tr><td>Hungry Coyote Import Store</td><td>USA</td><td class="num">$3,063</td><td class="num">5</td><td class="num">38</td><td class="num neg">240</td></tr>
+      <tr><td>Vins et alcools Chevalier</td><td>France</td><td class="num">$1,040</td><td class="num">4</td><td class="num">27</td><td class="num neg">175</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Main finding</h3>
+  <p class="finding">Revenue is highly concentrated. The <strong>top 10 customers (11% of the base) generate 45% of revenue</strong>, and the top 18 (20%) generate 60%. The bottom half of customers together produce only 12%. <strong>Eight customers have gone quiet</strong>; together they spent <strong>$51.8k in the 12 months before 6 May 1998</strong> ($105.9k over the whole period). The most urgent is <strong>Mère Paillarde</strong>, the 9th-largest customer: it used to order every ~18 days and has now been silent for 188 days. That one account explains Canada's decline in Q1. Three of the eight are French, which helps explain why France stalled despite winning new customers.</p>
+
+  <h3>Business implication</h3>
+  <p class="implication">Assign a named account manager to the top ~18 customers who drive 60% of revenue, and set up a simple <strong>“silent customer” alert</strong> that fires when a customer goes twice its normal gap without ordering. The eight customers above are this month's call list, starting with Mère Paillarde, Berglunds snabbköp and Blondel père et fils.</p>
+  <p class="caveat">Caveat: the 2× rule and 60-day minimum are judgment calls; a stricter or looser rule changes the list at the margin. The data cannot tell us <em>why</em> a customer went quiet (moved to a competitor, closed, seasonal), which is exactly what the call should find out.</p>
+</section>
+
+<!-- ============================ Q4 ============================ -->
+<section class="q" id="q4">
+  <div class="qnum">Question 4</div>
+  <h2>Are we shipping on time, and what causes late shipments?</h2>
+
+  <h3>Why it matters</h3>
+  <p>Each order carries a <em>required date</em> the customer was promised. Shipping late damages the relationships that Q3 shows the business depends on. Knowing whether lateness comes from a shipper, a region or the type of order tells the manager what to fix.</p>
+
+  <h3>Approach</h3>
+  <p>For the 809 shipped orders we measured days from order to shipment and flagged an order as <strong>late</strong> if it shipped after its required date. We compared late rates by <strong>promised window</strong> (Northwind uses 14-, 28- and 42-day deadlines), <strong>shipper</strong> and <strong>customer region</strong>. Because some groups are small, each rate is shown with a 95% confidence interval: if two intervals overlap heavily, the difference may just be chance. The 21 unshipped orders were all placed after 8 April 1998 and none was past its required date on 6 May, so they are excluded rather than counted as late.</p>
+
+  <figure>
+    <img src="figures/q4_days_vs_promise.png" alt="Box plot of days to ship for 14-, 28- and 42-day promise windows; all have a median of about 7 days. Red deadline markers show 18% of 14-day orders, 4% of 28-day and 0% of 42-day orders shipped late.">
+    <figcaption>Days from order to shipment, by the delivery window the customer was promised. Red line = the deadline. Orders are handled at the same pace whatever the deadline.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/q4_late_rates.png" alt="Dot plot of late-shipment rates with 95% intervals. 14-day orders 17.6%, 28-day 3.7%, 42-day 0%. Shippers 3.6% to 5.1% with overlapping intervals. British Isles highest region at 9.3% but with a wide interval.">
+    <figcaption>Dot = share of orders shipped after the required date. Gray bar = 95% confidence interval. Eastern Europe (Poland, 7 orders) is omitted from the chart because its interval is too wide to read; it had 0 late orders.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Shipper</th><th class="num">Orders</th><th class="num">Late rate</th><th class="num">Median days to ship</th><th class="num">Avg freight / order</th><th class="num">Freight per $100 of sales</th></tr></thead>
+    <tbody>
+      <tr><td>Federal Shipping</td><td class="num">249</td><td class="num">3.6%</td><td class="num">6</td><td class="num">$81.78</td><td class="num">$5.40</td></tr>
+      <tr><td>Speedy Express</td><td class="num">245</td><td class="num">4.9%</td><td class="num">7</td><td class="num">$65.45</td><td class="num">$4.63</td></tr>
+      <tr><td>United Package</td><td class="num">315</td><td class="num">5.1%</td><td class="num">7</td><td class="num">$87.48</td><td class="num">$5.33</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Main finding</h3>
+  <p class="finding">Shipping is reliable overall: <strong>95.4% of orders ship on time</strong> (37 late out of 809) and the typical order ships in 7 days. The big exception is <strong>rush orders</strong>. Orders promised within 14 days are late <strong>17.6%</strong> of the time versus 3.7% for standard 28-day orders, and they make up a third of all late orders even though they are only 8% of volume. The cause is visible in the first chart: rush orders take a median of 7.5 days to ship, <strong>no faster than standard orders</strong>, so any delay pushes them past the deadline. Differences between <strong>shippers are small and within the margin of error</strong> (3.6–5.1%). Speedy Express is the cheapest per dollar shipped. The British Isles have the highest regional late rate (9.3%), and this holds for standard orders too (9.7%), but with only 75 orders the evidence is suggestive, not conclusive.</p>
+
+  <h3>Business implication</h3>
+  <p class="implication">The fix is internal, not a shipper change. <strong>Flag 14-day orders at order entry and move them to the front of the packing queue.</strong> Cutting their late rate to the standard 3.7% would eliminate about 10 of 37 late shipments. Choose the shipper on cost rather than reliability, since reliability is similar. Speedy Express ships at about $4.63 per $100 of sales vs $5.33–$5.40 for the others. Monitor UK and Irish orders for the next quarter to confirm whether the higher late rate is real.</p>
+  <p class="caveat">Caveat: we only know the <em>ship</em> date, not the delivery date, so “late” here means “shipped after the required date”. Freight costs depend on weight and distance, which are not in the data, so the per-$100 comparison is a rough guide.</p>
+</section>
+
+<footer>
+  <p><strong>Data and method.</strong> Northwind Traders sample database (Excel version supplied for 15.561). Revenue = unit price × quantity × (1 − discount), using the price on each order line. May 1998 is partial (orders through 6 May) and is excluded from month-to-month comparisons. All figures and tables are produced by <code>python src/run_all.py</code>; see the repository README for reproduction steps.</p>
+  <p>Analysis code and charts were developed with help from an AI coding agent (Claude Code).</p>
+</footer>
+
+</main>
+</body>
+</html>
