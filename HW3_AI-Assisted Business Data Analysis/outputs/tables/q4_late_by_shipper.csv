@@ -1,4 +1,0 @@
-Shipper,Orders,Late,Median_days_to_ship,Mean_days_to_ship,Late_rate_%,CI_low_%,CI_high_%,Mean_freight_$,Freight_per_$100_revenue,Mean_order_revenue_$
-Federal Shipping,249,9,6.00,7.47,3.61,1.91,6.73,81.78,5.40,1514.24
-Speedy Express,245,12,7.00,8.57,4.90,2.82,8.36,65.45,4.63,1413.19
-United Package,315,16,7.00,9.23,5.08,3.15,8.09,87.48,5.33,1639.94
